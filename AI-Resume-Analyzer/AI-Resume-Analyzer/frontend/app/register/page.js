@@ -1,0 +1,6 @@
+"use client";
+import {useState} from "react"; import {useRouter} from "next/navigation"; import Link from "next/link";
+const API="http://localhost:8000";
+export default function Register(){const [name,setName]=useState("");const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [msg,setMsg]=useState("");const router=useRouter();
+async function submit(e){e.preventDefault();setMsg("Creating account...");try{const r=await fetch(API+"/api/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password})});const d=await r.json();if(!r.ok)throw Error(d.detail||"Registration failed");router.push("/login")}catch(e){setMsg(e.message)}}
+return <main className="auth"><form onSubmit={submit} className="card"><h1>Create account</h1><input placeholder="Full name" value={name} onChange={e=>setName(e.target.value)} required/><input placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required/><input placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} minLength={6} required/><button>Register</button><small>{msg}</small><p>Already registered? <Link href="/login">Login</Link></p></form></main>}
